@@ -222,6 +222,23 @@ setupController(controller, model) {
 }
 ```
 
+* **newObjectsAddMethod**
+ 
+`newObjectsAddMethod` is optional parameter for situations that you want to change
+the method used to append new objects to the list. Default value is `pushObjects`. You can use
+for example `unshiftObjects` to add objects to the beginning of the list.
+
+```js
+model() {
+  return this.infinityModel("product", {
+    perPage: 12,
+    startingPage: 1,
+    newObjectsAddMethod: 'unshiftObjects'
+  });
+}
+ ```
+ 
+
 ### afterInfinityModel
 
 In some cases, a single call to your data store isn't enough. The afterInfinityModel
@@ -263,6 +280,14 @@ In the case of a falsy value, the original promise result is used.
 So relating this to the examples above... In the first example, afterInfinityModel
 does not have an explicit return defined so the original posts promise result is used.
 In the second example, the returned collection of authors is used.
+
+#### Inverting the order of newObjects
+
+```javascript
+afterInfinityModel(newObjects) {
+  return newObjects.content.reverse();
+}
+```
 
 ### Event Hooks
 
@@ -389,7 +414,18 @@ scrollable will default to using the window for the scroll binding.
 {{infinity-loader triggerOffset=offset}}
 ```
 
-You can optionally pass an offset value.   This value will be used when calculating if the bottom of the scrollable has been reached.  
+You can optionally pass an offset value.   This value will be used when calculating if the bottom of the scrollable has been reached. 
+
+* **reverse**
+
+```hbs
+{{infinity-loader reverse=true}}
+```
+
+You can optionally reverse the infinity-loader in case you want to scroll up to add new objects instead of scroll down.
+
+By changing this behavior, you probably want to new objects be added at the beginning of the list and invert the order of new bjects.
+ 
 
 ### Use ember-infinity with button
 
