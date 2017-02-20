@@ -5,7 +5,7 @@ const InfinityLoaderComponent = Ember.Component.extend({
   classNames: ["infinity-loader"],
   classNameBindings: ["infinityModel.reachedInfinity"],
   guid: null,
-  eventDebounce: 10,
+  eventDebounce: 100,
   loadMoreAction: 'infinityLoad',
   loadingText: 'Loading Infinite Model...',
   loadedText: 'Infinite Model Entirely Loaded.',
@@ -114,8 +114,11 @@ const InfinityLoaderComponent = Ember.Component.extend({
         this.set('firstTimePushed', true);
         Ember.run.debounce(this, this._contentScrollDown, 150);
       } else {
-        Ember.run.scheduleOnce('afterRender', this, this._loadMoreIfNeeded);
-        this.get("_scrollable").scrollTop(100);
+        let oldTop = $('.messages')[0].scrollHeight;
+        Ember.run.scheduleOnce('afterRender', this, function() {
+          let newTop = $('.messages')[0].scrollHeight;
+          this.get("_scrollable").scrollTop(newTop - oldTop);
+        });
       }
     } else {
       Ember.run.scheduleOnce('afterRender', this, this._loadMoreIfNeeded);
